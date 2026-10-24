@@ -24,10 +24,13 @@ typedef struct s_list
 {
 	char			*content; //node, veriyi tutar (burdaki veri de okunan satır)
 	struct s_list	*next; //diğerinin adresini tutar
-}   t_list;
+}	t_list;
 
 char	*get_next_line(int fd);
 t_list	*lst_last(t_list *list);
 int		lst_add_back(t_list **list, char *content);
+int		has_new_line(t_list *list);
+int		line_len(t_list *list);
+void	free_list(t_list *list);
 
 #endif

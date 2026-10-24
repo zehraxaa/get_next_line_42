@@ -6,63 +6,95 @@
 /*   By: aaydogdu <aaydogdu@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/19 14:31:24 by aaydogdu          #+#    #+#             */
-/*   Updated: 2026/10/19 14:31:25 by aaydogdu         ###   ########.fr       */
+/*   Updated: 2026/10/24 21:56:57 by aaydogdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-t_list *lst_last(t_list *list) {
-  if (!list)
-    return (NULL);
-  while (list->next != NULL)
-    list = list->next;
-  return list;
+t_list	*lst_last(t_list *list)
+{
+	if (!list)
+		return (NULL);
+	while (list->next != NULL)
+		list = list->next;
+	return (list);
 }
 
-int lst_add_back(t_list **list, char *content) {
-  t_list *new_node;
-  t_list *last;
+int	lst_add_back(t_list **list, char *content)
+{
+	t_list	*new_node;
+	t_list	*last;
 
-  new_node = malloc(sizeof(t_list));
-  if (!new_node)
-    return (0);
-  new_node->content = content;
-  new_node->next = NULL;
-  if (*list == NULL) {
-    *list = new_node;
-    return (1);
-  } else {
-    last = lst_last(*list);
-    last->next = new_node;
-    return (1);
-  }
+	new_node = malloc(sizeof(t_list));
+	if (!new_node)
+		return (0);
+	new_node->content = content;
+	new_node->next = NULL;
+	if (*list == NULL)
+	{
+		*list = new_node;
+		return (1);
+	}
+	else
+	{
+		last = lst_last(*list);
+		last->next = new_node;
+		return (1);
+	}
 }
 
-int has_new_line(
-    t_list *list) // node'u alacak içinde \n var mı diye bakacak. bunu read ile
-                  // okuma yaptığımız döngüde çağırıcaz
-{}
+// node'u alacak içinde \n var mı diye bakacak. bunu read ile
+// okuma yaptığımız döngüde çağırıcaz
+int	has_new_line(t_list *list)
+{
+	t_list	*last;
+	int		i;
 
-// t_list* create_node(char *str)
-// {
-// 	t_list* newNode = (t_list*)malloc(sizeof(t_list));
-// 	if (!newNode)
-// 		exit(1);
-// 	newNode->content = str;
-// 	newNode->next = NULL;
-// 	return newNode;
-// }
-// #include <stdio.h>
-// int main()
-// {
-// 	t_list* node1 = create_node("A");
-// 	t_list* node2 = create_node("B");
-// 	t_list* node3 = create_node("C");
+	last = lst_last(list);
+	if (!last)
+		return (0);
+	i = 0;
+	while (last->content[i] != '\0')
+	{
+		if (last->content[i] == '\n')
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
-// 	node1->next = node2;
-// 	node2->next = node3;
+// \n'e kadar olan satırın uzunluğunu hesaplayıp malloc yapmak için
+int	line_len(t_list *list)
+{
+	int	len;
+	int	i;
 
-// 	t_list* returnNode = lst_last(node1);
-// 	printf("Last Node: %s \n", returnNode->content);
-// }
+	len = 0;
+	while (list != NULL)
+	{
+		i = 0;
+		while (list->content[i] != '\0')
+		{
+			if (list->content[i] == '\n')
+				return (len + 1);
+			len++;
+			i++;
+		}
+		list = list->next;
+	}
+	return (len);
+}
+
+void	free_list(t_list *list)
+{
+	t_list	*tmp_next;
+
+	while (list)
+	{
+		tmp_next = list->next;
+		free(list->content);
+		free(list);
+		list = tmp_next;
+	}
+}
