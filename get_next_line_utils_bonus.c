@@ -3,69 +3,98 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaydogdu <aaydogdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aaydogdu <aaydogdu@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/15 11:58:16 by aaydogdu          #+#    #+#             */
-/*   Updated: 2024/12/15 11:58:16 by aaydogdu         ###   ########.fr       */
+/*   Created: 2026/10/30 00:19:12 by aaydogdu          #+#    #+#             */
+/*   Updated: 2026/10/30 00:19:54 by aaydogdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-size_t	ft_strlen(const char *s)
+t_list	*lst_last(t_list *list)
 {
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-	{
-		i++;
-	}
-	return (i);
+	if (!list)
+		return (NULL);
+	while (list->next != NULL)
+		list = list->next;
+	return (list);
 }
 
-char	*ft_strchr(const char *s, int c)
+int	lst_add_back(t_list **list, char *content)
 {
-	char	i;
+	t_list	*new_node;
+	t_list	*last;
 
-	i = (char)c;
-	if (!s)
+	new_node = malloc(sizeof(t_list));
+	if (!new_node)
 		return (0);
-	if (i == '\0')
-		return ((char *)s);
-	while (*s)
+	new_node->content = content;
+	new_node->next = NULL;
+	if (*list == NULL)
 	{
-		if (*s == i)
-			return ((char *)s);
-		s++;
+		*list = new_node;
+		return (1);
+	}
+	else
+	{
+		last = lst_last(*list);
+		last->next = new_node;
+		return (1);
+	}
+}
+
+// node'u alacak içinde \n var mı diye bakacak. bunu read ile
+// okuma yaptığımız döngüde çağırıcaz
+int	has_new_line(t_list *list)
+{
+	t_list	*last;
+	int		i;
+
+	last = lst_last(list);
+	if (!last)
+		return (0);
+	i = 0;
+	while (last->content[i] != '\0')
+	{
+		if (last->content[i] == '\n')
+			return (1);
+		i++;
 	}
 	return (0);
 }
 
-char	*ft_strjoin(char *s1, char *s2)
+// \n'e kadar olan satırın uzunluğunu hesaplayıp malloc yapmak için
+int	line_len(t_list *list)
 {
-	char	*ptr;
-	size_t	i;
-	size_t	j;
+	int	len;
+	int	i;
 
-	if (!s1)
+	len = 0;
+	while (list != NULL)
 	{
-		s1 = (char *)malloc(sizeof(char));
-		s1[0] = 0;
+		i = 0;
+		while (list->content[i] != '\0')
+		{
+			if (list->content[i] == '\n')
+				return (len + 1);
+			len++;
+			i++;
+		}
+		list = list->next;
 	}
-	ptr = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!ptr)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (s1[i] != '\0')
+	return (len);
+}
+
+void	free_list(t_list *list)
+{
+	t_list	*tmp_next;
+
+	while (list)
 	{
-		ptr[i] = s1[i];
-		i++;
+		tmp_next = list->next;
+		free(list->content);
+		free(list);
+		list = tmp_next;
 	}
-	while (s2[j] != '\0')
-		ptr[i++] = s2[j++];
-	ptr[i] = '\0';
-	free(s1);
-	return (ptr);
 }
