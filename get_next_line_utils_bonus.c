@@ -44,8 +44,6 @@ int	lst_add_back(t_list **list, char *content)
 	}
 }
 
-// node'u alacak içinde \n var mı diye bakacak. bunu read ile
-// okuma yaptığımız döngüde çağırıcaz
 int	has_new_line(t_list *list)
 {
 	t_list	*last;
@@ -64,7 +62,6 @@ int	has_new_line(t_list *list)
 	return (0);
 }
 
-// \n'e kadar olan satırın uzunluğunu hesaplayıp malloc yapmak için
 int	line_len(t_list *list)
 {
 	int	len;

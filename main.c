@@ -1,21 +1,15 @@
 #include <fcntl.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include "get_next_line.h"
 
-int	main()
+int	main(int argc, char ** argv)
 {
-// 	t_list *list = NULL;
+	int		fd;
+	char	*line;
+	(void)argc;
 
-// 	lst_add_back(&list, "abc");
-// 	lst_add_back(&list, "def");
-// 	lst_add_back(&list, "ghi");
-
-// 	printf("AL sana content: %s\n", lst_last(list)->content);
-	int fd;
-	char *line;
-	fd = open("abc", O_RDONLY);
+	fd = open(argv[1], O_RDONLY);
+	printf("%d", BUFFER_SIZE);
 	if (fd < 0)
 	{
 		printf("File could not opened");
@@ -29,5 +23,5 @@ int	main()
 		line = get_next_line(fd);
 	}
 	close(fd);
-	return 0;
+	return (0);
 }

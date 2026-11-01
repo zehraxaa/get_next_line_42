@@ -14,8 +14,8 @@
 
 static int	read_stash(t_list **stash, int fd)
 {
-	char	*buf; //her turdaki okuma bufferı
-	int		bytes; //readin dönüş değeri
+	char	*buf;
+	int		bytes;
 
 	while (!has_new_line(*stash))
 	{
@@ -32,12 +32,12 @@ static int	read_stash(t_list **stash, int fd)
 		if (lst_add_back(stash, buf) == 0)
 		{
 			free(buf);
-			return (0); //1 dönerse sahiplik düğüme geçti, başarıyla oluştu. 0 dönerse kontrol bizde, düğüm oluşamadı
+			return (0);
 		}
 	}
 	return (1);
 }
-//stashin başından \n görene kadar mallocla yer ayırıp tek bir stringe kopyalıyo arkadaş
+
 static char	*extract_line(t_list *stash)
 {
 	char	*line;
@@ -64,7 +64,7 @@ static char	*extract_line(t_list *stash)
 	line[i] = '\0';
 	return (line);
 }
-//parametre, son düğümün contenti
+
 static char	*copy_rest(char *content)
 {
 	char	*rest;
@@ -75,13 +75,13 @@ static char	*copy_rest(char *content)
 	while (content[i] != '\0' && content[i] != '\n')
 		i++;
 	if (content[i] == '\0' || !content[++i])
-		return NULL;
+		return (NULL);
 	j = 0;
 	while (content[i + j] != '\0')
 		j++;
 	rest = malloc(j + 1);
 	if (!rest)
-		return NULL;
+		return (NULL);
 	j = 0;
 	while (content[i] != '\0')
 		rest[j++] = content[i++];
@@ -102,11 +102,11 @@ static t_list	*clean_stash(t_list *stash)
 		rest = copy_rest(last->content);
 	free_list(stash);
 	if (!rest)
-		return NULL;
+		return (NULL);
 	if (!lst_add_back(&new, rest))
-	{	
+	{
 		free(rest);
-		return NULL;
+		return (NULL);
 	}
 	return (new);
 }
@@ -131,7 +131,7 @@ char	*get_next_line(int fd)
 	{
 		free_list(stash);
 		stash = NULL;
-		return NULL;
+		return (NULL);
 	}
 	stash = clean_stash(stash);
 	return (line);
